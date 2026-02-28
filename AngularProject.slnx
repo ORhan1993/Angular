@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="angularproject.client/angularproject.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="AngularProject.Server/AngularProject.Server.csproj" />
+</Solution>

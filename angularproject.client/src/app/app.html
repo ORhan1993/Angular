@@ -1,0 +1,17 @@
+<div style="margin: 20px;">
+  <input [(ngModel)]="yeniPersonel.ad" placeholder="Ad">
+  <input [(ngModel)]="yeniPersonel.soyad" placeholder="Soyad">
+  <input [(ngModel)]="yeniPersonel.departman" placeholder="Departman">
+  <button (click)="kaydet()">Kaydet</button>
+</div>
+
+<table border="1" style="width:100%">
+  <tr>
+    <th>Ad Soyad</th>
+    <th>Departman</th>
+  </tr>
+  <tr *ngFor="let p of personeller">
+    <td>{{ p.ad }} {{ p.soyad }}</td>
+    <td>{{ p.departman }}</td>
+  </tr>
+</table>
