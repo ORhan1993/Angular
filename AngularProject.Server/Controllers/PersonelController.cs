@@ -28,10 +28,69 @@ namespace AngularProject.Server.Controllers
             await _context.SaveChangesAsync();
             return Ok(personel);
         }
-        [HttpGet("test")]
-        public IActionResult Test()
+        // --------------------------------------------------------
+        // GÜNCELLEME (UPDATE) İŞLEMİ - [HttpPut]
+        // Angular'dan gelen: this.http.put('/api/personel/1', personel)
+        // --------------------------------------------------------
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPersonel(int id, [FromBody] Personel guncelPersonel)
         {
-            return Ok("Backend sapasağlam ayakta, sorun SQL Server bağlantısında!");
+            // 1. Güvenlik Kontrolü: URL'den gelen ID ile formdan gelen nesnenin ID'si aynı mı?
+            if (id != guncelPersonel.Id)
+            {
+                return BadRequest("Hata: URL'deki ID ile güncellenecek nesnenin ID'si uyuşmuyor.");
+            }
+
+            // 2. Entity Framework'e bu kaydın "Değiştirildi (Modified)" olduğunu söylüyoruz
+            _context.Entry(guncelPersonel).State = EntityState.Modified;
+
+            try
+            {
+                // 3. Değişiklikleri veritabanına kaydet
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Eğer o ID'ye ait bir kayıt veritabanında yoksa 404 dön
+                if (!_context.Personeller.Any(e => e.Id == id))
+                {
+                    return NotFound("Hata: Güncellenmek istenen personel bulunamadı.");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            // 4. İşlem başarılı. Geriye veri dönmeye gerek yok (204 No Content)
+            return NoContent();
         }
+
+        // --------------------------------------------------------
+        // SİLME (DELETE) İŞLEMİ - [HttpDelete]
+        // Angular'dan gelen: this.http.delete('/api/personel/1')
+        // --------------------------------------------------------
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePersonel(int id)
+        {
+            // 1. Önce silinmek istenen personeli veritabanında bul
+            var personel = await _context.Personeller.FindAsync(id);
+
+            // 2. Eğer öyle bir personel yoksa 404 (Bulunamadı) dön
+            if (personel == null)
+            {
+                return NotFound("Hata: Silinmek istenen personel bulunamadı.");
+            }
+
+            // 3. Personeli Entity Framework bağlamından çıkar (Silinmek üzere işaretle)
+            _context.Personeller.Remove(personel);
+
+            // 4. Değişiklikleri veritabanına yansıt
+            await _context.SaveChangesAsync();
+
+            // 5. İşlem başarılı. (204 No Content)
+            return NoContent();
+        }
+
     }
 }

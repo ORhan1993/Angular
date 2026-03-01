@@ -1,48 +1,36 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router'; // router-outlet'i tanıması için eklendi
 import { App } from './app';
-import { FormsModule } from '@angular/forms'; // FormsModule'ü unutma
 
-describe('App', () => {
-  let component: App;
-  let fixture: ComponentFixture<App>;
-  let httpMock: HttpTestingController;
+// 'App' bileşeni için test senaryolarımızı başlatıyoruz
+describe('App Bileşeni (Layout)', () => {
 
+  // Her testten önce çalışacak hazırlık aşaması
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [App],
-      imports: [HttpClientTestingModule, FormsModule] // FormsModule eklendi
+      imports: [
+        RouterModule.forRoot([]) // HTML'deki <router-outlet> etiketinin hata vermesini engeller
+      ],
+      declarations: [
+        App
+      ],
     }).compileComponents();
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(App);
-    component = fixture.componentInstance;
-    httpMock = TestBed.inject(HttpTestingController);
+  // 1. TEST: Bileşen sorunsuz bir şekilde ayağa kalkıyor mu?
+  it('uygulama (app) sorunsuz oluşturulmalı', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy(); // app değişkeni var mı (true mu) diye kontrol eder
   });
 
-  afterEach(() => {
-    httpMock.verify();
+  // 2. TEST: Ekranda (HTML) Navbar başlığımız doğru yazıyor mu?
+  it('menüde "Mini CRM" başlığı bulunmalı', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges(); // HTML değişikliklerini tetikler
+    const compiled = fixture.nativeElement as HTMLElement;
+
+    // h2 etiketini bul ve içinde 'Mini CRM' yazıyor mu diye bak
+    expect(compiled.querySelector('h2')?.textContent).toContain('Mini CRM');
   });
-
-  it('should create the app', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should retrieve personeller from the server', () => {
-    const mockPersoneller = [
-      { id: 1, ad: 'Orhan', soyad: 'Bozgeyik', departman: 'IT' },
-      { id: 2, ad: 'Test', soyad: 'User', departman: 'HR' }
-    ];
-
-    component.ngOnInit();
-
-    // Servisteki URL ile eşleşmeli
-    const req = httpMock.expectOne('/api/personel');
-    expect(req.request.method).toEqual('GET');
-    req.flush(mockPersoneller);
-
-    // 'forecasts' yerine 'personeller' değişkenini kontrol ediyoruz
-    expect(component.personeller).toEqual(mockPersoneller);
-  });
-}); // <--- Syntax hatası burada düzeltildi
+});

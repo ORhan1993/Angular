@@ -1,14 +1,205 @@
-﻿:host {
-    max-width: 1280px;
-    padding: 2rem;
-    text-align: center;
+/* Genel Ayarlar */
+:host {
+  display: block;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
-th, td {
-    padding-left: 1rem;
-    padding-right: 1rem;
+.crm-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
 }
 
-table {
-    margin: 0 auto;
+/* Başlık Alanı */
+.crm-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
 }
+
+  .crm-header h2 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 700;
+  }
+
+.subtitle {
+  color: #3498db;
+  font-weight: 300;
+}
+
+/* İçerik Grid Yapısı */
+.crm-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+/* Kart Tasarımı */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  .card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+/* Form Elemanları */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.85rem;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fafbfa;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+    .form-group input:focus {
+      outline: none;
+      background-color: #fff;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+    }
+
+/* Butonlar */
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: #fff;
+}
+
+  .btn-primary:hover {
+    background-color: #2980b9;
+    box-shadow: 0 4px 10px rgba(41, 128, 185, 0.3);
+  }
+
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+/* Tablo Tasarımı */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.crm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+  .crm-table th, .crm-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f2f5;
+  }
+
+  .crm-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .crm-table tr:hover td {
+    background-color: #fcfdfe;
+  }
+
+/* Departman Etiketi (Badge) */
+.badge {
+  display: inline-block;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Boş Durum (Empty State) */
+.empty-state {
+  text-align: center;
+  color: #95a5a6;
+  padding: 3rem 0;
+  background-color: #fcfdfe;
+  border-radius: 8px;
+  border: 1px dashed #dcdfe6;
+}
+
+/* Mobil Uyumluluk (Responsive) */
+@media (max-width: 850px) {
+  .crm-content {
+    grid-template-columns: 1fr;
+  }
+}
+/* Kırmızı Silme Butonu (Tehlikeli İşlem Rengi) */
+.btn-danger {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+  .btn-danger:hover {
+    background-color: #c0392b;
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+  }
+
+/* Tablo içindeki butonların çok büyük durmaması için küçük buton sınıfı */
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  width: auto; /* Varsayılan %100 genişliği eziyoruz */
+}
+
+/* Sarı/Turuncu Seç (Güncelle) Butonu */
+.btn-warning {
+  background-color: #f39c12;
+  color: #fff;
+}
+
+  .btn-warning:hover {
+    background-color: #e67e22;
+    box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+  }

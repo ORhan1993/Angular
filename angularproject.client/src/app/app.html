@@ -1,29 +1,9 @@
-<div style="font-family: Arial, sans-serif; padding: 20px;">
-  <h2>Mini CRM - Personel Yönetimi</h2>
+<nav style="background-color: #2c3e50; padding: 15px 30px; display: flex; gap: 20px;">
+  <h2 style="color: white; margin: 0; margin-right: 30px;">Mini CRM</h2>
+  <a routerLink="/" style="color: #ecf0f1; text-decoration: none; font-weight: bold;">Ana Sayfa</a>
+  <a routerLink="/personel" style="color: #ecf0f1; text-decoration: none; font-weight: bold;">Personel Yönetimi</a>
+</nav>
 
-  <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc;">
-    <h3>Yeni Personel Ekle</h3>
-    <form (ngSubmit)="personelEkle()">
-      <div style="margin-bottom: 10px;">
-        <label>Ad: </label>
-        <input type="text" [(ngModel)]="yeniPersonel.ad" name="ad" required>
-      </div>
-      <div style="margin-bottom: 10px;">
-        <label>Soyad: </label>
-        <input type="text" [(ngModel)]="yeniPersonel.soyad" name="soyad" required>
-      </div>
-      <div style="margin-bottom: 10px;">
-        <label>Departman: </label>
-        <input type="text" [(ngModel)]="yeniPersonel.departman" name="departman" required>
-      </div>
-      <button type="submit">Sisteme Kaydet</button>
-    </form>
-  </div>
-
-  <h3>Kayıtlı Personeller</h3>
-  <ul>
-    <li *ngFor="let p of personeller" style="margin-bottom: 5px;">
-      <strong>{{ p.ad }} {{ p.soyad }}</strong> - <em>{{ p.departman }}</em>
-    </li>
-  </ul>
+<div style="padding: 20px;">
+  <router-outlet></router-outlet>
 </div>
