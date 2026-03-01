@@ -16,8 +16,14 @@ namespace AngularProject.Server.Controllers
         public async Task<IActionResult> Get() => Ok(await _context.Personeller.ToListAsync());
 
         [HttpPost]
-        public async Task<IActionResult> Post(Personel personel)
+        public async Task<IActionResult> Post([FromBody] Personel personel)
         {
+            // Gelen veriyi doğrula
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState); // Hatalı veri varsa 400 döner, 500'den kurtulursun
+            }
+
             _context.Personeller.Add(personel);
             await _context.SaveChangesAsync();
             return Ok(personel);

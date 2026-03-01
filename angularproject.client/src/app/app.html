@@ -1,17 +1,29 @@
-<div style="margin: 20px;">
-  <input [(ngModel)]="yeniPersonel.ad" placeholder="Ad">
-  <input [(ngModel)]="yeniPersonel.soyad" placeholder="Soyad">
-  <input [(ngModel)]="yeniPersonel.departman" placeholder="Departman">
-  <button (click)="kaydet()">Kaydet</button>
-</div>
+<div style="font-family: Arial, sans-serif; padding: 20px;">
+  <h2>Mini CRM - Personel Yönetimi</h2>
 
-<table border="1" style="width:100%">
-  <tr>
-    <th>Ad Soyad</th>
-    <th>Departman</th>
-  </tr>
-  <tr *ngFor="let p of personeller">
-    <td>{{ p.ad }} {{ p.soyad }}</td>
-    <td>{{ p.departman }}</td>
-  </tr>
-</table>
+  <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc;">
+    <h3>Yeni Personel Ekle</h3>
+    <form (ngSubmit)="personelEkle()">
+      <div style="margin-bottom: 10px;">
+        <label>Ad: </label>
+        <input type="text" [(ngModel)]="yeniPersonel.ad" name="ad" required>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label>Soyad: </label>
+        <input type="text" [(ngModel)]="yeniPersonel.soyad" name="soyad" required>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label>Departman: </label>
+        <input type="text" [(ngModel)]="yeniPersonel.departman" name="departman" required>
+      </div>
+      <button type="submit">Sisteme Kaydet</button>
+    </form>
+  </div>
+
+  <h3>Kayıtlı Personeller</h3>
+  <ul>
+    <li *ngFor="let p of personeller" style="margin-bottom: 5px;">
+      <strong>{{ p.ad }} {{ p.soyad }}</strong> - <em>{{ p.departman }}</em>
+    </li>
+  </ul>
+</div>
