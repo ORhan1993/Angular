@@ -1,6 +1,7 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { FormsModule } from '@angular/forms'; // FormsModule'ü unutma
 
 describe('App', () => {
   let component: App;
@@ -10,7 +11,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [App],
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule, FormsModule] // FormsModule eklendi
     }).compileComponents();
   });
 
@@ -28,18 +29,20 @@ describe('App', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should retrieve weather forecasts from the server', () => {
-    const mockForecasts = [
-      { date: '2021-10-01', temperatureC: 20, temperatureF: 68, summary: 'Mild' },
-      { date: '2021-10-02', temperatureC: 25, temperatureF: 77, summary: 'Warm' }
+  it('should retrieve personeller from the server', () => {
+    const mockPersoneller = [
+      { id: 1, ad: 'Orhan', soyad: 'Bozgeyik', departman: 'IT' },
+      { id: 2, ad: 'Test', soyad: 'User', departman: 'HR' }
     ];
 
     component.ngOnInit();
 
-    const req = httpMock.expectOne('/weatherforecast');
+    // Servisteki URL ile eşleşmeli
+    const req = httpMock.expectOne('/api/personel');
     expect(req.request.method).toEqual('GET');
-    req.flush(mockForecasts);
+    req.flush(mockPersoneller);
 
-    expect(component.forecasts).toEqual(mockForecasts);
+    // 'forecasts' yerine 'personeller' değişkenini kontrol ediyoruz
+    expect(component.personeller).toEqual(mockPersoneller);
   });
-};
+}); // <--- Syntax hatası burada düzeltildi

@@ -30,13 +30,15 @@ export class App implements OnInit {
   }
 
   personelEkle() {
-    // Basit doğrulama: Alanlar boşsa işlem yapma
     if (!this.yeniPersonel.ad.trim() || !this.yeniPersonel.soyad.trim()) {
       alert("Lütfen tüm alanları doldurun!");
       return;
     }
 
-    this.personelService.addPersonel(this.yeniPersonel).subscribe({
+    // Id'yi çıkarıp sadece gerekli verileri gönderiyoruz (Destructuring)
+    const { id, ...personelData } = this.yeniPersonel;
+
+    this.personelService.addPersonel(personelData as any).subscribe({
       next: (eklenen) => {
         this.personeller.push(eklenen);
         this.yeniPersonel = { id: 0, ad: '', soyad: '', departman: '' };

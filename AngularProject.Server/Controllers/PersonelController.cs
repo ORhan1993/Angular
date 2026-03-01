@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AngularProject.Server.Data;
 using AngularProject.Server.Models;
@@ -27,6 +27,11 @@ namespace AngularProject.Server.Controllers
             _context.Personeller.Add(personel);
             await _context.SaveChangesAsync();
             return Ok(personel);
+        }
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok("Backend sapasağlam ayakta, sorun SQL Server bağlantısında!");
         }
     }
 }
