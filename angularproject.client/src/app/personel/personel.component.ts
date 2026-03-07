@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { PersonelService, Personel } from '../services/personel.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotifyService } from '../services/notify.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../shared/confirm-dialog.component';
 
 @Component({
   selector: 'app-personel',
   templateUrl: './personel.component.html',
-  styleUrls: ['./personel.component.css'],
   standalone: false
 })
 export class PersonelComponent implements OnInit {
@@ -15,63 +16,52 @@ export class PersonelComponent implements OnInit {
 
   constructor(
     private personelService: PersonelService,
-    private cdr: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private notify: NotifyService,
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit(): void {
-    this.listeyiGetir();
-  }
+  ngOnInit() { this.listeyiGetir(); }
 
-  listeyiGetir(): void {
-    this.personelService.getPersoneller().subscribe({
-      next: (data: Personel[]) => {
-        this.personeller = data;
-        this.cdr.detectChanges();
-      },
-      error: (err: Error) => console.error("Veri çekme hatası:", err)
+  listeyiGetir() {
+    this.personelService.getPersoneller().subscribe(data => {
+      this.personeller = data;
+      this.cdr.detectChanges();
     });
   }
 
-  // Düzeltme: Parametre tipini netleştirdik
-  personelSec(personel: Personel): void {
-    this.seciliPersonel = personel;
-  }
+  personelSec(p: Personel) { this.seciliPersonel = p; }
 
-  // Düzeltme: Parametre tipini netleştirdik
-  personelSil(id: number): void {
-    if (!confirm("Bu personeli silmek istediğinize emin misiniz?")) return;
+  personelSil(id: number) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
 
-    this.personelService.deletePersonel(id).subscribe({
-      next: () => {
-        this.personeller = this.personeller.filter(p => p.id !== id);
-        if (this.seciliPersonel?.id === id) this.seciliPersonel = null;
-        this.snackBar.open('Personel silindi.', 'Tamam', { duration: 3000 });
+    dialogRef.afterClosed().subscribe(sonuc => {
+      if (sonuc) {
+        this.personelService.deletePersonel(id).subscribe(() => {
+          this.personeller = this.personeller.filter(p => p.id !== id);
+          this.notify.showSuccess('Personel silindi.');
+        });
       }
     });
   }
 
-  vazgecildi(): void {
+  // Hata Çözümü: Metot ismi HTML ile uyumlu hale getirildi
+  vazgecildi() {
     this.seciliPersonel = null;
   }
 
-  formdanGelenVeriyiKaydet(formVerisi: Partial<Personel>): void {
+  // Hata Çözümü: Metot ismi HTML ile uyumlu hale getirildi
+  formdanGelenVeriyiKaydet(formVerisi: any) {
     if (this.seciliPersonel) {
-      const islemGorecekKayit: Personel = { ...this.seciliPersonel, ...formVerisi as Personel };
-      this.personelService.updatePersonel(this.seciliPersonel.id, islemGorecekKayit).subscribe({
-        next: () => {
-          this.listeyiGetir();
-          this.seciliPersonel = null;
-          this.snackBar.open('Personel güncellendi.', 'Kapat', { duration: 3000 });
-        }
+      this.personelService.updatePersonel(this.seciliPersonel.id, { ...this.seciliPersonel, ...formVerisi }).subscribe(() => {
+        this.listeyiGetir();
+        this.seciliPersonel = null;
+        this.notify.showSuccess('Personel güncellendi.');
       });
     } else {
-      this.personelService.addPersonel(formVerisi as Personel).subscribe({
-        next: (eklenen: Personel) => {
-          this.personeller = [...this.personeller, eklenen];
-          this.seciliPersonel = null;
-          this.snackBar.open('Personel eklendi.', 'Tamam', { duration: 3000 });
-        }
+      this.personelService.addPersonel(formVerisi).subscribe(yeni => {
+        this.personeller = [...this.personeller, yeni];
+        this.notify.showSuccess('Yeni personel eklendi.');
       });
     }
   }

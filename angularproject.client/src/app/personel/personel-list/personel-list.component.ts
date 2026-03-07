@@ -1,8 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Personel } from '../../services/personel.service';
-
-// MATERIAL MODÜLLERİ (Hataların çözümü için şart)
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,28 +8,20 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-personel-list',
   templateUrl: './personel-list.component.html',
-  styleUrls: ['./personel-list.component.css'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule
-  ]
+  standalone: true, // Modülsüz mimari
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule]
 })
 export class PersonelListComponent {
-  // PARENT'TAN (PersonelComponent) GELECEK VERİLER
-  @Input() personeller: Personel[] = [];
-  @Input() aramaMetni: string = '';
+  @Input() personeller: Personel[] = []; // Parent'tan gelen ana liste
+  @Input() aramaMetni: string = ''; // Navbar/Input'tan gelen filtre
 
-  // PARENT'A HABER VERİLECEK OLAYLAR
-  @Output() secildi = new EventEmitter<Personel>();
-  @Output() silindi = new EventEmitter<number>();
+  @Output() secildi = new EventEmitter<Personel>(); // Düzenle butonu olayı
+  @Output() silindi = new EventEmitter<number>(); // Sil butonu olayı
 
-  // Tablo sütunları
+  // Material tablo sütun başlıkları
   displayedColumns: string[] = ['ad', 'soyad', 'departman', 'islem'];
 
-  // HTML tarafındaki hata (TS2339) çözümü için bu getter şart:
+  // Dinamik filtreleme yapan getter
   get gorunenPersoneller(): Personel[] {
     return this.personeller.filter(p =>
       p.ad.toLowerCase().includes(this.aramaMetni.toLowerCase()) ||
@@ -39,12 +29,6 @@ export class PersonelListComponent {
     );
   }
 
-  // HTML'deki (click) olayları için metotlar:
-  onSec(personel: Personel) {
-    this.secildi.emit(personel);
-  }
-
-  onSil(id: number) {
-    this.silindi.emit(id);
-  }
+  onSec(p: Personel) { this.secildi.emit(p); }
+  onSil(id: number) { this.silindi.emit(id); }
 }
