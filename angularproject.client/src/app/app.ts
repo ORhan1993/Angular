@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,6 @@ import { Component } from '@angular/core';
   standalone: false
 })
 export class App {
-  // İçi tamamen BOŞ olmalı. Ne personeller dizisi, ne de ngOnInit metodu kalacak.
+  // HTML dosyasında (template) kullanabilmek için 'public' olarak tanımlıyoruz
+  constructor(public authService: AuthService) { }
 }

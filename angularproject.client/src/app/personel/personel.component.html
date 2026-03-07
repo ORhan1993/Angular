@@ -1,38 +1,18 @@
 <div class="crm-container">
-  <div class="card">
-    <h3 *ngIf="seciliPersonelId === 0">Yeni Ekle</h3>
-    <h3 *ngIf="seciliPersonelId > 0">Güncelle</h3>
 
-    <form #frm="ngForm" (ngSubmit)="kaydetVeyaGuncelle(frm)" autocomplete="off">
-      <input type="text" ngModel name="ad" placeholder="Ad" required>
-      <input type="text" ngModel name="soyad" placeholder="Soyad" required>
-      <input type="text" ngModel name="departman" placeholder="Departman" required>
-
-      <button type="submit" class="btn btn-primary">
-        {{ seciliPersonelId === 0 ? 'Kaydet' : 'Güncelle' }}
-      </button>
-      <button type="button" *ngIf="seciliPersonelId > 0" (click)="formuSifirla(frm)">Vazgeç</button>
-    </form>
-  </div>
+  <app-personel-form [seciliPersonel]="seciliPersonel"
+                     (formGonder)="formdanGelenVeriyiKaydet($event)"
+                     (formIptal)="vazgecildi()">
+  </app-personel-form>
 
   <div class="card">
     <input type="text" [(ngModel)]="aramaMetni" placeholder="Ara...">
 
-    <table>
-      <thead>
-        <tr><th>Ad</th><th>Soyad</th><th>Departman</th><th>İşlem</th></tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let p of gorunenPersoneller">
-          <td>{{ p.ad }}</td>
-          <td>{{ p.soyad }}</td>
-          <td>{{ p.departman }}</td>
-          <td>
-            <button (click)="personelSec(p, frm)">Seç</button>
-            <button (click)="personelSil(p.id)">Sil</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <app-personel-list [personeller]="personeller"
+                       [aramaMetni]="aramaMetni"
+                       (secildi)="personelSec($event)"
+                       (silindi)="personelSil($event)">
+    </app-personel-list>
   </div>
+
 </div>

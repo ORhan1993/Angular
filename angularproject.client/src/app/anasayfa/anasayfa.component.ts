@@ -1,33 +1,36 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // 1. Ekleme: ChangeDetectorRef'i import ediyoruz
-import { PersonelService } from '../services/personel.service';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PersonelService, Personel } from '../services/personel.service';
 
 @Component({
   selector: 'app-anasayfa',
   templateUrl: './anasayfa.component.html',
   styleUrls: ['./anasayfa.component.css'],
-  standalone: false
+  standalone: true,
+  imports: [CommonModule]
 })
 export class AnasayfaComponent implements OnInit {
   toplamPersonel: number = 0;
 
-  // 2. Ekleme: Constructor'a enjekte ediyoruz
   constructor(
     private personelService: PersonelService,
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.personelService.getPersoneller().subscribe({
-      next: (data) => {
-        console.log("Ana sayfa veriyi çekiyor:", data);
-
-        // Veriyi atıyoruz
-        this.toplamPersonel = data.length;
-
-        // 3. Ekleme: Angular'a "Değişiklik var, ekranı hemen güncelle" diyoruz
+      next: (data: Personel[]) => {
+        // Tip güvenliği ve veri kontrolü
+        if (Array.isArray(data)) {
+          this.toplamPersonel = data.length;
+        } else {
+          this.toplamPersonel = 0;
+        }
         this.cdr.detectChanges();
       },
-      error: (err) => console.error("Ana sayfa hata:", err)
+      error: (err: Error) => {
+        console.error("Ana sayfa veri çekme hatası:", err);
+      }
     });
   }
 }
