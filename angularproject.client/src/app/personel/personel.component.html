@@ -1,15 +1,14 @@
-<div class="crm-container">
+<div class="crm-container" style="padding: 20px;">
 
-  <app-personel-form [seciliPersonel]="seciliPersonel"
-                     (formGonder)="formdanGelenVeriyiKaydet($event)"
-                     (formIptal)="vazgecildi()">
-  </app-personel-form>
+  <div style="margin-bottom: 15px; display: flex; justify-content: flex-end;">
+    <button mat-raised-button color="primary" (click)="yeniPersonelEkle()">
+      <mat-icon>add</mat-icon> Yeni Personel Ekle
+    </button>
+  </div>
 
   <div class="card">
-    <input type="text" [(ngModel)]="aramaMetni" placeholder="Ara...">
-
     <app-personel-list [personeller]="personeller"
-                       [aramaMetni]="aramaMetni"
+                       [aramaMetni]="aramaMetni()"
                        (secildi)="personelSec($event)"
                        (silindi)="personelSil($event)">
     </app-personel-list>

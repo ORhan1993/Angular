@@ -1,34 +1,52 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Personel } from '../../services/personel.service';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-personel-list',
   templateUrl: './personel-list.component.html',
-  standalone: true, // Modülsüz mimari
-  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule]
+  standalone: true,
+  imports: [CommonModule, MatTableModule, MatButtonModule, MatIconModule, MatPaginatorModule, MatSortModule]
 })
-export class PersonelListComponent {
-  @Input() personeller: Personel[] = []; // Parent'tan gelen ana liste
-  @Input() aramaMetni: string = ''; // Navbar/Input'tan gelen filtre
+export class PersonelListComponent implements OnChanges, AfterViewInit {
+  @Input() personeller: Personel[] = [];
+  @Input() aramaMetni: string = '';
 
-  @Output() secildi = new EventEmitter<Personel>(); // Düzenle butonu olayı
-  @Output() silindi = new EventEmitter<number>(); // Sil butonu olayı
+  @Output() secildi = new EventEmitter<Personel>();
+  @Output() silindi = new EventEmitter<number>();
 
-  // Material tablo sütun başlıkları
   displayedColumns: string[] = ['ad', 'soyad', 'departman', 'islem'];
+  dataSource = new MatTableDataSource<Personel>([]);
 
-  // Dinamik filtreleme yapan getter
-  get gorunenPersoneller(): Personel[] {
-    return this.personeller.filter(p =>
-      p.ad.toLowerCase().includes(this.aramaMetni.toLowerCase()) ||
-      p.soyad.toLowerCase().includes(this.aramaMetni.toLowerCase())
-    );
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['personeller']) {
+      this.dataSource.data = this.personeller;
+    }
+
+    // Arama metni değiştiğinde Material Table filter'ını güncelle
+    if (changes['aramaMetni']) {
+      this.dataSource.filter = this.aramaMetni.trim().toLowerCase();
+    }
   }
 
-  onSec(p: Personel) { this.secildi.emit(p); }
-  onSil(id: number) { this.silindi.emit(id); }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  onSec(p: Personel) {
+    this.secildi.emit(p);
+  }
+
+  onSil(id: number) {
+    this.silindi.emit(id);
+  }
 }

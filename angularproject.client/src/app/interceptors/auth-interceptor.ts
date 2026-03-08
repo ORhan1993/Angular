@@ -1,26 +1,18 @@
 import { HttpInterceptorFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  // Servisimizi inject ediyoruz
-  const authService = inject(AuthService);
+  const token = localStorage.getItem('jwt_token');
 
-  // Eğer kullanıcı giriş yapmış durumdaysa (Signal'i parantez ile okuyoruz)
-  if (authService.isLoggedIn()) {
-
-    // DİKKAT: Angular'da HTTP Request'leri değiştirilemez (immutable) nesnelerdir.
-    // Bu yüzden isteğin doğrudan üzerine yazamayız, clone() ile kopyasını alıp onu değiştiririz.
-    const klonlanmisIstek = req.clone({
+  if (token) {
+    // Token varsa, isteğin içine Authorization başlığını (Bearer Token) ekleyip klonluyoruz
+    const clonedReq = req.clone({
       setHeaders: {
-        Authorization: `Bearer BENIM_GIZLI_TOKEN_12345`
+        Authorization: `Bearer ${token}`
       }
     });
-
-    // Değiştirilmiş yeni isteği backend'e doğru yola çıkarıyoruz
-    return next(klonlanmisIstek);
+    return next(clonedReq);
   }
 
-  // Eğer kullanıcı giriş yapmamışsa, isteğe hiç dokunmadan olduğu gibi yola devam ettir
+  // Token yoksa isteği olduğu gibi gönder
   return next(req);
 };

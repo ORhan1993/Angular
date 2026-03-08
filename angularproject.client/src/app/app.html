@@ -1,23 +1,48 @@
-<nav class="navbar">
-  <ul style="display: flex; gap: 20px; list-style-type: none; margin: 0; padding: 0; align-items: center; width: 100%;">
-    <li>
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Ana Sayfa</a>
-    </li>
-    <li>
-      <a routerLink="/personel" routerLinkActive="active">Personeller</a>
-    </li>
+<mat-sidenav-container class="sidenav-container" *ngIf="authService.isLoggedIn(); else loginTemplate">
 
-    <li style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+  <mat-sidenav #sidenav mode="side" opened class="sidenav">
+    <div class="logo-container">
+      <h2>Yönetim Paneli</h2>
+    </div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <mat-icon matListItemIcon>dashboard</mat-icon> <span matListItemTitle>Ana Sayfa</span>
+      </a>
+      <a mat-list-item routerLink="/personel" routerLinkActive="active">
+        <mat-icon matListItemIcon>people</mat-icon> <span matListItemTitle>Personeller</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-      <span *ngIf="authService.isLoggedIn()" style="color: green; font-weight: bold;">Aktif Oturum</span>
+  <mat-sidenav-content>
 
-      <button *ngIf="!authService.isLoggedIn()" (click)="authService.login()" class="btn btn-primary">Giriş Yap</button>
-      <button *ngIf="authService.isLoggedIn()" (click)="authService.logout()" class="btn btn-danger">Çıkış Yap</button>
+    <mat-toolbar color="primary" class="top-toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Personel Yönetim Sistemi</span>
 
-    </li>
-  </ul>
-</nav>
+      <span style="flex: 1 1 auto;"></span> <div class="search-box">
+        <mat-icon style="font-size: 20px; color: #666; padding-left: 8px;">search</mat-icon>
+        <input type="text" placeholder="Hızlı Ara..." (input)="onSearch($event)">
+      </div>
 
-<div class="main-content">
+      <span style="font-size: 14px; margin-right: 15px; font-weight: 500;">
+        Hoşgeldin, {{ authService.getCurrentUser() | titlecase }}
+      </span>
+
+      <button mat-button (click)="authService.logout()">
+        <mat-icon>logout</mat-icon> Çıkış
+      </button>
+    </mat-toolbar>
+
+    <div class="main-content" style="padding: 20px;">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-template #loginTemplate>
   <router-outlet></router-outlet>
-</div>
+</ng-template>

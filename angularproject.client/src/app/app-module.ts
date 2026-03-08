@@ -1,8 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+// YENİ: Material bileşenlerinin animasyonları (Sidenav kayması vb.) için gerekli
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+// YENİ: Sidebar, Toolbar ve Menü ikonları için gereken Material modülleri
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
 import { provideHttpClient, withInterceptorsFromDi, withInterceptors } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -15,11 +25,28 @@ import { PersonelFormComponent } from './personel/personel-form/personel-form.co
 import { authInterceptor } from './interceptors/auth-interceptor';
 
 @NgModule({
-  declarations: [App, PersonelComponent], // Sadece standalone olmayanlar
+  declarations: [App], // Sadece standalone olmayan App bileşeni burada
   imports: [
-    BrowserModule, FormsModule, ReactiveFormsModule, AppRoutingModule,
-    AnasayfaComponent, PersonelListComponent, PersonelFormComponent, // Standalone olanlar
-    MatSnackBarModule, MatDialogModule // Material modülleri
+    BrowserModule,
+    BrowserAnimationsModule, // Sidenav animasyonları için eklendi
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+
+    // Standalone bileşenlerimiz
+    AnasayfaComponent,
+    PersonelComponent,
+    PersonelListComponent,
+    PersonelFormComponent,
+
+    // Material Modüllerimiz
+    MatSnackBarModule,
+    MatDialogModule,
+    MatSidenavModule,    // YENİ: Yan menü konteyneri
+    MatToolbarModule,    // YENİ: Üstteki mavi bar
+    MatListModule,       // YENİ: Yan menüdeki liste elemanları
+    MatIconModule,       // YENİ: Menü ve buton ikonları
+    MatButtonModule      // YENİ: Material buton tasarımları
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi(), withInterceptors([authInterceptor]))

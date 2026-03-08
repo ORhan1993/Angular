@@ -1,9 +1,23 @@
 using AngularProject.Server.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("BenimCokGizliVeGuvenliSifrelemeAnahtarim123!")),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 builder.Services.AddOpenApi();
 
 // Eski çalışan SQL Server bağlantını geri getirdik
@@ -33,6 +47,8 @@ var app = builder.Build();
 
 app.UseCors("AllowAngular");
 app.UseCors("AngularIcinIzinVer");
+app.UseAuthentication(); // UseAuthorization'dan önce gelmeli!
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.MapFallbackToFile("/index.html");
